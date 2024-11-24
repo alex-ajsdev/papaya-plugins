@@ -1,5 +1,3 @@
-//this works
-
 import ProjectVersions.openosrsVersion
 
 buildscript {
@@ -9,37 +7,44 @@ buildscript {
 }
 
 plugins {
-    java //this enables annotationProcessor and implementation in dependencies
+    java // Enables annotationProcessor and implementation in dependencies
     checkstyle
 }
 
-//project.extra["GithubUrl"] = "https://github.com/illumineawake/illu-plugins"
-
+// Apply custom plugins
 apply<BootstrapPlugin>()
 
 allprojects {
     group = "com.openosrs.externals"
-    apply<MavenPublishPlugin>()
-}
-
-allprojects {
-    apply<MavenPublishPlugin>()
 
     repositories {
-        mavenLocal()
         mavenCentral()
         jcenter()
+        flatDir {
+            dirs("libs") // Directory containing client.jar
+        }
     }
+}
+
+dependencies {
+    // Ensure client.jar is available for the main project
+    compileOnly(fileTree("libs") {
+        include("client.jar")
+    })
 }
 
 subprojects {
     group = "com.openosrs.externals"
 
+    // Define PluginProvider and PluginLicense for all subprojects
     project.extra["PluginProvider"] = "Papaya"
-    //project.extra["ProjectSupportUrl"] = "https://discord.gg/9fGzEDR"
     project.extra["PluginLicense"] = "3-Clause BSD License"
 
     repositories {
+        flatDir {
+            dirs("libs")
+        }
+
         jcenter {
             content {
                 excludeGroupByRegex("com\\.openosrs.*")
@@ -48,7 +53,9 @@ subprojects {
 
         exclusiveContent {
             forRepository {
-                mavenLocal()
+                flatDir {
+                    dirs("libs")
+                }
             }
             filter {
                 includeGroupByRegex("com\\.openosrs.*")
@@ -62,10 +69,9 @@ subprojects {
         annotationProcessor(Libraries.lombok)
         annotationProcessor(Libraries.pf4j)
 
-        compileOnly("com.openosrs:http-api:$openosrsVersion+")
-        compileOnly("com.openosrs:runelite-api:$openosrsVersion+")
-        compileOnly("com.openosrs:runelite-client:$openosrsVersion+")
-        compileOnly("com.openosrs.rs:runescape-api:$openosrsVersion+")
+        compileOnly(fileTree("libs") {
+            include("client.jar")
+        })
 
         compileOnly(Libraries.findbugs)
         compileOnly(Libraries.apacheCommonsText)
@@ -75,24 +81,6 @@ subprojects {
         compileOnly(Libraries.okhttp3)
         compileOnly(Libraries.pf4j)
         compileOnly(Libraries.rxjava)
-    }
-
-    configure<JavaPluginConvention> {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-
-    configure<PublishingExtension> {
-        repositories {
-            maven {
-                url = uri("$buildDir/repo")
-            }
-        }
-        publications {
-            register("mavenJava", MavenPublication::class) {
-                from(components["java"])
-            }
-        }
     }
 
     tasks {
@@ -119,6 +107,18 @@ subprojects {
             isReproducibleFileOrder = true
             dirMode = 493
             fileMode = 420
+        }
+    }
+}
+
+
+// Add client.jar explicitly to all subprojects
+gradle.projectsEvaluated {
+    subprojects.forEach { project ->
+        project.dependencies {
+            compileOnly(fileTree("libs") {
+                include("client.jar")
+            })
         }
     }
 }
