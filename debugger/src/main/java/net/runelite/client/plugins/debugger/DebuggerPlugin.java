@@ -1,7 +1,10 @@
 package net.runelite.client.plugins.debugger;
 
 import lombok.extern.slf4j.Slf4j;
+import net.runelite.api.Actor;
+import net.runelite.api.Projectile;
 import net.runelite.api.events.MenuOptionClicked;
+import net.runelite.api.events.ProjectileSpawned;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
@@ -28,5 +31,18 @@ public class DebuggerPlugin extends Plugin {
         log.info("Param 0: {}", event.getParam0());
         log.info("Param 1: {}", event.getParam1());
         log.info("========================");
+    }
+
+    @Subscribe
+    void onProjectileSpawned(ProjectileSpawned event) {
+        Projectile projectile =  event.getProjectile();
+        String interactingName = projectile.getInteracting().getName();
+        String className = projectile.getModel().getClass().toString();
+        log.info("==== Projectile Spawned ====");
+        log.debug("Projectile ID: {}, X: {}, Y: {}, Speed: {}, Height: {}, Interacting Name: {}. Class Name: {}",
+                projectile.getId(), projectile.getX(), projectile.getY(),
+                projectile.getVelocityX(), projectile.getVelocityY(), interactingName, className);
+
+
     }
 }
