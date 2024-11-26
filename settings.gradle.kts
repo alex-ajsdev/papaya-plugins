@@ -38,6 +38,7 @@ include(":autoprayer")
 include(":autowhisperer")
 include(":autoprayerpot")
 include(":autosuperior")
+include(":demonicgorillakilla")
 
 
 
