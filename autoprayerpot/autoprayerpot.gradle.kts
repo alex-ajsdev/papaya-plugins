@@ -25,7 +25,7 @@
 
 version = "1.0.0"
 
-project.extra["PluginName"] = "111 Prayer Drinker"
+project.extra["PluginName"] = "111 Auto Prayer Pot"
 project.extra["PluginDescription"] = "Drinks prayer/restore potions below 20% prayer points."
 
 tasks {

@@ -37,7 +37,7 @@ include(":debugger")
 include(":autoprayer")
 include(":autowhisperer")
 include(":autoprayerpot")
-
+include(":autosuperior")
 
 
 
@@ -50,3 +50,4 @@ for (project in rootProject.children) {
         require(buildFile.isFile) { "Project '${project.path} must have a $buildFile build script" }
     }
 }
+
