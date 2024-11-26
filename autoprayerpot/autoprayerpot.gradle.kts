@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 Owain van Brakel <https:github.com/Owain94>
+ * Copyright (c) 2019 Owain van Brakel <https://github.com/Owain94>
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -23,30 +23,21 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+version = "1.0.0"
 
+project.extra["PluginName"] = "111 Prayer Drinker"
+project.extra["PluginDescription"] = "Drinks prayer/restore potions below 20% prayer points."
 
-
-
-
-rootProject.name = "Papaya Plugins"
-
-
-include(":autohonourguard")
-include(":perkpoints")
-include(":debugger")
-include(":autoprayer")
-include(":autowhisperer")
-include(":autoprayerpot")
-
-
-
-
-for (project in rootProject.children) {
-    project.apply {
-        projectDir = file(name)
-        buildFileName = "$name.gradle.kts"
-
-        require(projectDir.isDirectory) { "Project '${project.path} must have a $projectDir directory" }
-        require(buildFile.isFile) { "Project '${project.path} must have a $buildFile build script" }
+tasks {
+    jar {
+        manifest {
+            attributes(mapOf(
+                "Plugin-Version" to project.version,
+                "Plugin-Id" to nameToId(project.extra["PluginName"] as String),
+                "Plugin-Provider" to project.extra["PluginProvider"],
+                "Plugin-Description" to project.extra["PluginDescription"],
+                "Plugin-License" to project.extra["PluginLicense"]
+            ))
+        }
     }
 }
