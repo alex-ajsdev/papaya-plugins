@@ -18,8 +18,8 @@ import java.util.*;
 @PluginDescriptor(
         name = "111 Auto Gorilla Killa",
         enabledByDefault = false,
-        description = "Automatically drinks the Superior potion when stats drop below a configurable threshold.",
-        tags = {"superior", "potion", "111", "papaya"}
+        description = "It's the gorilla killa",
+        tags = {"gorilla", "demonic", "111", "papaya"}
 )
 @Slf4j
 public class DemonicGorillaKillaPlugin extends Plugin {
