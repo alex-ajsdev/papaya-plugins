@@ -31,8 +31,15 @@ public class AutoZulrahPlugin extends Plugin {
     private ClientThread clientThread;
 
     private final List<TileItem> loot = new ArrayList<>();
-    private final Set<String> lootWhitelist = Set.of("Coins", "Jar of swamp", "Tanzanite mutagen", "Magma mutagen", "Tanzanite fang", "Magic fang", "Serpentine visage", "mahogany logs", "coal", "battlestaff", "antidote++", "manta ray", "crushed nest", "coconut", "zulrah's scales", "magic seed", "grimy snapdragon", "grimy dwarf weed", "grimy torstol", "yew logs", "grimy toadflax");
-
+    private static final Set<String> lootWhitelistNames = Set.of("Coins", "Jar of swamp", "Tanzanite mutagen", "Magma mutagen", "Tanzanite fang", "Magic fang", "Serpentine visage", "mahogany logs", "coal", "battlestaff", "antidote++", "manta ray", "crushed nest", "coconut", "zulrah's scales", "magic seed", "grimy snapdragon", "grimy dwarf weed", "grimy torstol", "yew logs", "grimy toadflax");
+    private static final Set<Integer> lootWhitelistIds = Set.of(
+            12927, // Serpentine Visage
+            12922, // Tanzanite Fang
+            12932, // Magic Fang
+            12936, // Jar of Swamp
+            13200, // Tanzanite Mutagen
+            13201 // Magma Mutagen
+    );
     private State state = State.IDLE;
     private int timeout = 0;
 
@@ -278,12 +285,14 @@ public class AutoZulrahPlugin extends Plugin {
     @Subscribe
     private void onItemSpawned(ItemSpawned event) {
         TileItem item = event.getItem();
-        String itemName = client.getItemDefinition(item.getId()).getName().toLowerCase();
+        int itemId = item.getId();
+        String itemName = client.getItemDefinition(itemId).getName().toLowerCase();
+        log.debug("Item spawned: {} (ID: {}, Quantity: {})", itemName, itemId, item.getQuantity());
 
-        if (lootWhitelist.contains(itemName)) {
+        if (lootWhitelistIds.contains(itemId) || lootWhitelistNames.contains(itemName)) {
             loot.add(item);
-            lootSpawned = true; // Loot has spawned
-            log.info("Loot spawned: {}", itemName);
+            lootSpawned = true;
+            log.info("Whitelisted item added to loot: {} (ID: {})", itemName, itemId);
         }
     }
 
