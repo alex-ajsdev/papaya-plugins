@@ -41,6 +41,7 @@ include(":autosuperior")
 include(":demonicgorillakilla")
 include(":autominer")
 include(":autozulrah")
+include(":autoophidia")
 
 
 
@@ -53,3 +54,5 @@ for (project in rootProject.children) {
         require(buildFile.isFile) { "Project '${project.path} must have a $buildFile build script" }
     }
 }
+include("autoophidia:src:main:net.runeline.client.plugins.autoophidia")
+findProject(":autoophidia:src:main:net.runeline.client.plugins.autoophidia")?.name = "net.runeline.client.plugins.autoophidia"

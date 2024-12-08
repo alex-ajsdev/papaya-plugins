@@ -59,7 +59,7 @@ public class AutoHonourGuardPlugin extends Plugin
         tick++;
 
         if (!guardSpawned) {
-            if (tick >= 20) {
+            if (tick >= 7) {
                 log.info("Still waiting for the guard to spawn...");
                 tick = 0;
             }

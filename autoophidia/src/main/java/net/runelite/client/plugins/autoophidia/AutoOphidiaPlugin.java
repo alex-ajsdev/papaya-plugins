@@ -1,4 +1,4 @@
-package net.runelite.client.plugins.autowhisperer;
+package net.runelite.client.plugins.autoophidia;
 
 import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.*;
@@ -16,13 +16,13 @@ import java.util.*;
 
 @Extension
 @PluginDescriptor(
-        name = "Auto Whisperer",
+        name = "111 Auto Ophidia",
         enabledByDefault = false,
-        description = "Papaya - Auto Whisperer",
+        description = "Papaya - Auto Ophidia",
         tags = {"papaya"}
 )
 @Slf4j
-public class AutoWhispererPlugin extends Plugin {
+public class AutoOphidiaPlugin extends Plugin {
 
     @Inject
     private Client client;
@@ -31,7 +31,7 @@ public class AutoWhispererPlugin extends Plugin {
     private ClientThread clientThread;
 
     private final List<TileItem> loot = new ArrayList<>();
-    private final Set<String> lootBlacklist = Set.of("manta ray", "super combat", "super attack", "bone");
+    private final Set<String> lootBlacklist = Set.of("sacred eel", "bones");
 
     private final Map<Integer, Prayer> PRAYER_MAP = Map.of(
             2445, Prayer.PROTECT_FROM_MAGIC,
@@ -136,16 +136,16 @@ public class AutoWhispererPlugin extends Plugin {
             timeout = 2;
         } else {
             if (isWhispererAlive() && !isPlayerAttacking()) {
-                log.info("Whisperer is alive and not attacking. Attacking...");
+                log.info("Ophidia is alive and not attacking. Attacking...");
                 attackWhisperer();
                 timeout = 2;
             } else if (!isWhispererAlive()) {
                 if (loot.isEmpty() && !waitingForLoot) {
-                    log.info("Whisperer is dead. Waiting for loot to spawn...");
+                    log.info("Ophidia is dead. Waiting for loot to spawn...");
                     timeout = 4;
                     waitingForLoot = true;
                 } else if (!loot.isEmpty()) {
-                    log.info("Whisperer is dead. Looting items...");
+                    log.info("Ophidia is dead. Looting items...");
                     lootItems();
                     timeout = 1;
                     waitingForLoot = false;
@@ -154,7 +154,7 @@ public class AutoWhispererPlugin extends Plugin {
                     homeTeleport();
                     timeout = 10;
                 } else {
-                    log.info("Whisperer is dead, no loot available. Starting new instance...");
+                    log.info("Ophidia is dead, no loot available. Starting new instance...");
                     previousTeleport();
                     timeout = 2;
                     waitingForLoot = false;
@@ -175,7 +175,7 @@ public class AutoWhispererPlugin extends Plugin {
 
     private boolean isWhispererAlive() {
         return client.getNpcs().stream()
-                .anyMatch(npc -> npc.getName() != null && npc.getName().toLowerCase().contains("whisperer"));
+                .anyMatch(npc -> npc.getName() != null && npc.getName().toLowerCase().contains("ophidia"));
     }
 
     private boolean isPlayerAttacking() {
@@ -189,16 +189,16 @@ public class AutoWhispererPlugin extends Plugin {
         }
         NPC npc = (NPC) interacting;
 
-        return npc.getName() != null && npc.getName().toLowerCase().contains("whisperer");
+        return npc.getName() != null && npc.getName().toLowerCase().contains("ophidia");
     }
 
     private void attackWhisperer() {
         Optional<NPC> npcOptional = client.getNpcs().stream()
-                .filter(npc -> npc.getName() != null && npc.getName().toLowerCase().contains("whisperer"))
+                .filter(npc -> npc.getName() != null && npc.getName().toLowerCase().contains("ophidia"))
                 .findFirst();
 
         if (npcOptional.isEmpty()) {
-            log.info("Could not find whisperer");
+            log.info("Could not find Ophidia");
             return;
         }
         NPC whisperer = npcOptional.get();
@@ -274,6 +274,19 @@ public class AutoWhispererPlugin extends Plugin {
                 MenuAction.CC_OP.getId(),
                 -1,
                 14286948
+        );
+        clientThread.invokeLater(this::widgetInstancedOphidia);
+    }
+
+    private void widgetInstancedOphidia() {
+        teleportInProgress = true;
+        client.invokeMenuAction(
+                "Continue",
+                "",
+                0,
+                MenuAction.WIDGET_CONTINUE.getId(),
+                2,
+                14352385
         );
         clientThread.invokeLater(this::widgetContinue);
     }
